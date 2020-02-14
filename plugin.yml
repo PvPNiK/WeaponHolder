@@ -1,0 +1,11 @@
+name: WeaponHolder
+version: 1.1
+main: me.PvPNiK.wh.WeaponHolder
+
+commands:
+  weaponholder:
+    aliases: [wh]
+
+permissions:
+  weaponholder.reload:
+    description: reloads worlds.yml and itemPosition.yml

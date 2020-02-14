@@ -1,0 +1,45 @@
+# default values:
+# SOUTH: x = 0.875, y = -0.85, z = 0.95
+# WEST: x = 0.07, y = -0.85, z = 0.876
+# NORTH: x = 0.115, y = -0.85, z = 0.06
+# EAST: x = 0.93, y = -0.85, z = 0.125
+
+#template:
+#  items:
+#    MATERIAL:
+#      south:
+#        x: 0
+#        y: 0
+#        z: 0
+#      west:
+#        x: 0
+#        y: 0
+#        z: 0
+#      north:
+#        x: 0
+#        y: 0
+#        z: 0
+#      east:
+#        x: 0
+#        y: 0
+#        z: 0
+
+#example
+items:
+  DIAMOND_HOE:
+    south:
+      x: 0.875
+      y: -0.75
+      z: 0.9
+    west:
+      x: 0.1
+      y: -0.75
+      z: 0.876
+    north:
+      x: 0.12
+      y: -0.75
+      z: 0.1
+    east:
+      x: 0.9
+      y: -0.75
+      z: 0.125
