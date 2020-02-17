@@ -14,7 +14,7 @@ public class Command implements CommandExecutor {
 
         if (commandSender instanceof Player) {
             if (!commandSender.isOp() && !commandSender.hasPermission("weaponholder.reload")) {
-                commandSender.sendMessage("not enough permissions.");
+                commandSender.sendMessage("Not enough permissions.");
             }
         }
 
