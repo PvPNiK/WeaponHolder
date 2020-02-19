@@ -1,6 +1,6 @@
-package me.PvPNiK.wh.event;
+package me.pvpnik.weaponHolder.event;
 
-import me.PvPNiK.wh.holder.Holder;
+import me.pvpnik.weaponHolder.holder.Holder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

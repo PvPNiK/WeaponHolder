@@ -1,6 +1,6 @@
-package me.PvPNiK.wh.itemPosition;
+package me.pvpnik.weaponHolder.itemPosition;
 
-import me.PvPNiK.wh.WeaponHolder;
+import me.pvpnik.weaponHolder.WeaponHolder;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -22,7 +22,7 @@ public class ItemPositionFile {
         }
     }
 
-    private void loadYamls() {
+    public void loadYamls() {
         try {
             itemPositionYaml.load(itemPosition);
         } catch (Exception e) {

@@ -1,13 +1,16 @@
-package me.PvPNiK.wh.holder;
+package me.pvpnik.weaponHolder.holder;
 
-import me.PvPNiK.wh.Position;
-import me.PvPNiK.wh.WeaponHolder;
+import me.pvpnik.weaponHolder.WeaponHolder;
+import me.pvpnik.weaponHolder.itemPosition.Position;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HolderManager {
 
@@ -20,6 +23,18 @@ public class HolderManager {
 
     public boolean contains(Location location) {
         return holders.containsKey(location);
+    }
+
+    public Set<Holder> getHoldersInWorld(World world) {
+        Set<Holder> holderSet = new HashSet<>();
+
+        for (Location location : new HashSet<>(holders.keySet())) {
+            if (location.getWorld().getName().equals(world.getName())) {
+                holderSet.add(holders.get(location));
+            }
+        }
+
+        return  holderSet;
     }
 
     public void save() {
@@ -60,7 +75,12 @@ public class HolderManager {
 
             Holder holder = new Holder(location, itemStack, position);
             add(holder);
-            Bukkit.getScheduler().runTaskLater(WeaponHolder.getInstance(), (T) -> holder.spawn(), 5l);
+            Bukkit.getScheduler().runTaskLater(WeaponHolder.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    holder.spawn();
+                }
+            }, 5l);
         }
         holderFile.delete();
     }

@@ -1,20 +1,24 @@
-package me.PvPNiK.wh.holder;
+package me.pvpnik.weaponHolder.holder;
 
-import me.PvPNiK.wh.WeaponHolder;
-import me.PvPNiK.wh.cooldown.Cooldown;
-import me.PvPNiK.wh.cooldown.CooldownManager;
-import me.PvPNiK.wh.event.HolderBreakEvent;
-import me.PvPNiK.wh.event.HolderEquipItemEvent;
-import me.PvPNiK.wh.event.HolderUnequipItemEvent;
+import me.pvpnik.weaponHolder.WeaponHolder;
+import me.pvpnik.weaponHolder.cooldown.Cooldown;
+import me.pvpnik.weaponHolder.cooldown.CooldownManager;
+import me.pvpnik.weaponHolder.event.HolderBreakEvent;
+import me.pvpnik.weaponHolder.event.HolderEquipItemEvent;
+import me.pvpnik.weaponHolder.event.HolderUnequipItemEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +29,7 @@ public class HolderListener implements Listener {
         Holder holder = e.getHolder();
         Player player = e.getPlayer();
 
-        player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+        player.getInventory().setItemInHand(new ItemStack(Material.AIR));
         WeaponHolder.getInstance().holderManager.add(holder);
         holder.spawn();
         CooldownManager.addToCooldown(player.getUniqueId(), new Cooldown(player.getUniqueId()));
@@ -76,6 +80,17 @@ public class HolderListener implements Listener {
     }
 
     @EventHandler
+    public void onArmorStandDmg(EntityDamageEvent e) {
+        if (e.getEntity() == null)
+            return;
+        if (e.getEntityType() != EntityType.ARMOR_STAND)
+            return;
+
+        if (e.getEntity().getCustomName().equals(WeaponHolder.getInstance().getDescription().getName()))
+            e.setCancelled(true);
+    }
+
+    @EventHandler
     public void onWorldUnload(WorldUnloadEvent e) {
         for (Entity en : e.getWorld().getEntities()) {
             if (en instanceof ArmorStand) {
@@ -83,6 +98,16 @@ public class HolderListener implements Listener {
                     en.remove();
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent e) {
+        World loadedWorld = e.getWorld();
+        HolderManager holderManager = WeaponHolder.getInstance().holderManager;
+
+        for (Holder holder : holderManager.getHoldersInWorld(loadedWorld)) {
+            holder.spawn();
         }
     }
 

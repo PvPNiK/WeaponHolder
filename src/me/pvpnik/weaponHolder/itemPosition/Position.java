@@ -1,4 +1,4 @@
-package me.PvPNiK.wh;
+package me.pvpnik.weaponHolder.itemPosition;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

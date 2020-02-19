@@ -1,25 +1,27 @@
-package me.PvPNiK.wh.event;
+package me.pvpnik.weaponHolder.event;
 
-import me.PvPNiK.wh.Position;
-import me.PvPNiK.wh.Utils;
-import me.PvPNiK.wh.WeaponHolder;
-import me.PvPNiK.wh.cooldown.Cooldown;
-import me.PvPNiK.wh.cooldown.CooldownManager;
-import me.PvPNiK.wh.holder.Holder;
-import me.PvPNiK.wh.holder.HolderManager;
-import me.PvPNiK.wh.world.WorldManager;
+import com.mysql.jdbc.Util;
+import me.pvpnik.weaponHolder.itemPosition.Position;
+import me.pvpnik.weaponHolder.utils.Utils;
+import me.pvpnik.weaponHolder.WeaponHolder;
+import me.pvpnik.weaponHolder.cooldown.CooldownManager;
+import me.pvpnik.weaponHolder.holder.Holder;
+import me.pvpnik.weaponHolder.holder.HolderManager;
+import me.pvpnik.weaponHolder.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.TripwireHook;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -67,16 +69,9 @@ public class HolderCallEvent implements Listener {
 
     @EventHandler
     public void holderRemoveItem(PlayerInteractEvent e) {
-        if (e.getAction() != Action.RIGHT_CLICK_BLOCK)
-            return;
-        if (e.getHand() != EquipmentSlot.HAND)
-            return;
-        if (e.getClickedBlock().getType() != Material.TRIPWIRE_HOOK)
-            return;
-
         Player player = e.getPlayer();
 
-        if (CooldownManager.isInCooldown(player.getUniqueId()))
+        if (!toExecute(e, player))
             return;
 
         HolderManager holderManager = WeaponHolder.getInstance().holderManager;
@@ -97,19 +92,12 @@ public class HolderCallEvent implements Listener {
 
     @EventHandler
     public void holderAddItem(PlayerInteractEvent e) {
-        if (e.getAction() != Action.RIGHT_CLICK_BLOCK)
-            return;
-        if (e.getHand() != EquipmentSlot.HAND)
-            return;
-        if (e.getClickedBlock().getType() != Material.TRIPWIRE_HOOK)
-            return;
-
         Player player = e.getPlayer();
 
-        if (CooldownManager.isInCooldown(player.getUniqueId()))
+        if (!toExecute(e, player))
             return;
 
-        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        ItemStack itemStack =/* Utils.isOneHandedVersion() ? */player.getInventory().getItemInHand() /*: player.getInventory().getItemInMainHand()*/;
 
         if (itemStack == null || itemStack.getType() == Material.AIR)
             return;
@@ -139,6 +127,31 @@ public class HolderCallEvent implements Listener {
 
         Holder holder = new Holder(block.getLocation(), itemStack, position);
         Bukkit.getPluginManager().callEvent(new HolderEquipItemEvent(holder, player));
+    }
+
+    @EventHandler
+    public void t(PlayerChatEvent e) {
+        ArmorStand as = Utils.getNewArmorStand(e.getPlayer().getLocation());
+        Bukkit.broadcastMessage("as: " + as.toString());
+        as.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
+        Bukkit.broadcastMessage("as: " + as.getEquipment().toString());
+    }
+
+    private boolean toExecute(PlayerInteractEvent e, Player player) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return false;
+
+        if (!Utils.isOneHandedVersion())
+            if (e.getHand() != EquipmentSlot.HAND)
+                return false;
+
+        if (e.getClickedBlock().getType() != Material.TRIPWIRE_HOOK)
+            return false;
+
+        if (CooldownManager.isInCooldown(player.getUniqueId()))
+            return false;
+
+        return true;
     }
 
 }

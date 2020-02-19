@@ -1,6 +1,6 @@
-package me.PvPNiK.wh.holder;
+package me.pvpnik.weaponHolder.holder;
 
-import me.PvPNiK.wh.WeaponHolder;
+import me.pvpnik.weaponHolder.WeaponHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

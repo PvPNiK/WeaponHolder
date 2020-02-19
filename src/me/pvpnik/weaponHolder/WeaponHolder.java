@@ -1,12 +1,13 @@
-package me.PvPNiK.wh;
+package me.pvpnik.weaponHolder;
 
-import me.PvPNiK.wh.event.HolderCallEvent;
-import me.PvPNiK.wh.holder.HolderListener;
-import me.PvPNiK.wh.holder.HolderManager;
-import me.PvPNiK.wh.itemPosition.ItemPositionFile;
-import me.PvPNiK.wh.itemPosition.ItemPositionManager;
-import me.PvPNiK.wh.world.WorldFile;
-import me.PvPNiK.wh.world.WorldManager;
+import me.pvpnik.weaponHolder.commands.WeaponHolderCommand;
+import me.pvpnik.weaponHolder.event.HolderCallEvent;
+import me.pvpnik.weaponHolder.holder.HolderListener;
+import me.pvpnik.weaponHolder.holder.HolderManager;
+import me.pvpnik.weaponHolder.itemPosition.ItemPositionFile;
+import me.pvpnik.weaponHolder.itemPosition.ItemPositionManager;
+import me.pvpnik.weaponHolder.world.WorldFile;
+import me.pvpnik.weaponHolder.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -36,7 +37,7 @@ public class WeaponHolder extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new HolderCallEvent(), this);
         Bukkit.getPluginManager().registerEvents(new HolderListener(), this);
-        getCommand("weaponholder").setExecutor(new Command());
+        getCommand("weaponholder").setExecutor(new WeaponHolderCommand());
 
         for (World world : Bukkit.getWorlds()) {
             for (Entity en : world.getEntities()) {

@@ -1,6 +1,6 @@
-package me.PvPNiK.wh.world;
+package me.pvpnik.weaponHolder.world;
 
-import me.PvPNiK.wh.WeaponHolder;
+import me.pvpnik.weaponHolder.WeaponHolder;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public class WorldFile {
         }
     }
 
-    private void loadYamls() {
+    public void loadYamls() {
         try {
             yaml.load(file);
         } catch (Exception e) {

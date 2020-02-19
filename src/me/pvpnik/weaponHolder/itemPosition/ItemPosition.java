@@ -1,6 +1,5 @@
-package me.PvPNiK.wh.itemPosition;
+package me.pvpnik.weaponHolder.itemPosition;
 
-import me.PvPNiK.wh.Position;
 import org.bukkit.Location;
 import org.bukkit.Material;
 

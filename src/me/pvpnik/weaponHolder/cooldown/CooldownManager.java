@@ -1,4 +1,4 @@
-package me.PvPNiK.wh.cooldown;
+package me.pvpnik.weaponHolder.cooldown;
 
 import org.bukkit.scheduler.BukkitRunnable;
 

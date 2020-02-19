@@ -1,8 +1,7 @@
-package me.PvPNiK.wh.itemPosition;
+package me.pvpnik.weaponHolder.itemPosition;
 
-import me.PvPNiK.wh.Position;
-import me.PvPNiK.wh.Utils;
-import me.PvPNiK.wh.WeaponHolder;
+import me.pvpnik.weaponHolder.utils.Utils;
+import me.pvpnik.weaponHolder.WeaponHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,6 +35,7 @@ public class ItemPositionManager {
     }
 
     public void load() {
+        WeaponHolder.getInstance().itemPositionFile.loadYamls();
         YamlConfiguration file = WeaponHolder.getInstance().itemPositionFile.getFile();
 
         if (!file.contains("items"))

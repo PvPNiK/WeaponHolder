@@ -1,9 +1,11 @@
-package me.PvPNiK.wh.holder;
+package me.pvpnik.weaponHolder.holder;
 
-import me.PvPNiK.wh.Position;
-import me.PvPNiK.wh.Utils;
-import me.PvPNiK.wh.WeaponHolder;
-import me.PvPNiK.wh.itemPosition.ItemPosition;
+import com.mysql.jdbc.Buffer;
+import me.pvpnik.weaponHolder.itemPosition.Position;
+import me.pvpnik.weaponHolder.utils.Utils;
+import me.pvpnik.weaponHolder.WeaponHolder;
+import me.pvpnik.weaponHolder.itemPosition.ItemPosition;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -38,7 +40,10 @@ public class Holder {
         blockLocation.setPitch(position.getPitch());
 
         armorStand = Utils.getNewArmorStand(blockLocation);
-        armorStand.setItemInHand(itemStack);
+        if (Utils.isOneHandedVersion())
+            armorStand.setItemInHand(itemStack);
+        else
+            armorStand.getEquipment().setItemInMainHand(itemStack);
     }
 
     public Location getHolderLocation() {

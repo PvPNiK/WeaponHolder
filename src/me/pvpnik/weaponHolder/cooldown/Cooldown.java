@@ -1,6 +1,6 @@
-package me.PvPNiK.wh.cooldown;
+package me.pvpnik.weaponHolder.cooldown;
 
-import me.PvPNiK.wh.WeaponHolder;
+import me.pvpnik.weaponHolder.WeaponHolder;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;

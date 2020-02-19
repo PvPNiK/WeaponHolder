@@ -1,5 +1,7 @@
-package me.PvPNiK.wh;
+package me.pvpnik.weaponHolder.utils;
 
+import me.pvpnik.weaponHolder.WeaponHolder;
+import me.pvpnik.weaponHolder.itemPosition.Position;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -8,6 +10,10 @@ import org.bukkit.util.EulerAngle;
 public class Utils {
 
     public static final Location emptyLoc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0, 0, 0);
+
+    public static boolean isOneHandedVersion() {
+        return Bukkit.getVersion().contains("1.8");
+    }
 
     public static boolean isAttached(byte b) {
         int i;
@@ -43,7 +49,8 @@ public class Utils {
         ArmorStand as = location.getWorld().spawn(location, ArmorStand.class);
 
         as.setVisible(false);
-        as.setInvulnerable(true);
+        if (!isOneHandedVersion())
+            as.setInvulnerable(true);
 
         as.setCustomName(WeaponHolder.getInstance().getDescription().getName());
         as.setCustomNameVisible(false);
