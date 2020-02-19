@@ -8,6 +8,9 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.util.EulerAngle;
 
 public class Utils {
+    private Utils() {
+        throw new AssertionError("Instantiating utility class.");
+    }
 
     public static final Location emptyLoc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0, 0, 0);
 

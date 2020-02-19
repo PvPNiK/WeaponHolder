@@ -74,6 +74,8 @@ public class HolderListener implements Listener {
     public void onArmorStandInteract(PlayerInteractAtEntityEvent e) {
         if (!(e.getRightClicked() instanceof ArmorStand))
             return;
+        if (e.getRightClicked().getCustomName() == null)
+            return;
 
         if (e.getRightClicked().getCustomName().equals(WeaponHolder.getInstance().getDescription().getName()))
             e.setCancelled(true);
@@ -85,6 +87,8 @@ public class HolderListener implements Listener {
             return;
         if (e.getEntityType() != EntityType.ARMOR_STAND)
             return;
+        if (e.getEntity().getCustomName() == null)
+            return;
 
         if (e.getEntity().getCustomName().equals(WeaponHolder.getInstance().getDescription().getName()))
             e.setCancelled(true);
@@ -94,7 +98,7 @@ public class HolderListener implements Listener {
     public void onWorldUnload(WorldUnloadEvent e) {
         for (Entity en : e.getWorld().getEntities()) {
             if (en instanceof ArmorStand) {
-                if (en.getCustomName().equals(WeaponHolder.getInstance().getDescription().getName())) {
+                if (en.getCustomName() != null && en.getCustomName().equals(WeaponHolder.getInstance().getDescription().getName())) {
                     en.remove();
                 }
             }

@@ -42,7 +42,7 @@ public class WeaponHolder extends JavaPlugin {
         for (World world : Bukkit.getWorlds()) {
             for (Entity en : world.getEntities()) {
                 if (en instanceof ArmorStand) {
-                    if (en.getCustomName().equals(getDescription().getName())) {
+                    if (en.getCustomName() != null && en.getCustomName().equals(getDescription().getName())) {
                         en.remove();
                     }
                 }
