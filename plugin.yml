@@ -1,5 +1,5 @@
 name: WeaponHolder
-version: 1.3
+version: 1.4
 main: me.pvpnik.weaponHolder.WeaponHolder
 
 commands:
@@ -9,3 +9,5 @@ commands:
 permissions:
   weaponholder.reload:
     description: reloads worlds.yml and itemPosition.yml
+  weaponholder.bypass:
+    description: allows the player get other player item

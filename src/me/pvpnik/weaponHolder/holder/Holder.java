@@ -1,15 +1,15 @@
 package me.pvpnik.weaponHolder.holder;
 
-import com.mysql.jdbc.Buffer;
 import me.pvpnik.weaponHolder.itemPosition.Position;
 import me.pvpnik.weaponHolder.utils.Utils;
 import me.pvpnik.weaponHolder.WeaponHolder;
 import me.pvpnik.weaponHolder.itemPosition.ItemPosition;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class Holder {
 
@@ -17,11 +17,13 @@ public class Holder {
     private ItemStack itemStack;
     private Position position;
     private ArmorStand armorStand;
+    private UUID uuid;
 
-    public Holder(Location holderLocation, ItemStack itemStack, Position position) {
+    public Holder(Location holderLocation, ItemStack itemStack, Position position, UUID uuid) {
         this.holderLocation = holderLocation;
         this.itemStack = itemStack;
         this.position = position;
+        this.uuid = uuid;
     }
 
     public void spawn() {
@@ -60,5 +62,9 @@ public class Holder {
 
     public Position getPosition() {
         return position;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 }

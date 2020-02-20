@@ -2,6 +2,7 @@ package me.pvpnik.weaponHolder.event;
 
 import com.mysql.jdbc.Util;
 import me.pvpnik.weaponHolder.itemPosition.Position;
+import me.pvpnik.weaponHolder.utils.Messages;
 import me.pvpnik.weaponHolder.utils.Utils;
 import me.pvpnik.weaponHolder.WeaponHolder;
 import me.pvpnik.weaponHolder.cooldown.CooldownManager;
@@ -13,15 +14,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -87,6 +85,14 @@ public class HolderCallEvent implements Listener {
             return;
 
         Holder holder = holderManager.getHolder(blockLocation);
+
+        if (!player.isOp() && !player.hasPermission("weaponholder.bypass")) {
+            if (!player.getUniqueId().equals(holder.getUuid())) {
+                player.sendMessage(Messages.weaponHolderIsUsed(holder.getUuid()));
+                return;
+            }
+        }
+
         Bukkit.getPluginManager().callEvent(new HolderUnequipItemEvent(holder, player));
     }
 
@@ -97,7 +103,7 @@ public class HolderCallEvent implements Listener {
         if (!toExecute(e, player))
             return;
 
-        ItemStack itemStack =/* Utils.isOneHandedVersion() ? */player.getInventory().getItemInHand() /*: player.getInventory().getItemInMainHand()*/;
+        ItemStack itemStack = Utils.isOneHandedVersion() ? player.getInventory().getItemInHand() : player.getInventory().getItemInMainHand();
 
         if (itemStack == null || itemStack.getType() == Material.AIR)
             return;
@@ -125,16 +131,8 @@ public class HolderCallEvent implements Listener {
         if (position == null)
             return;
 
-        Holder holder = new Holder(block.getLocation(), itemStack, position);
+        Holder holder = new Holder(block.getLocation(), itemStack, position, player.getUniqueId());
         Bukkit.getPluginManager().callEvent(new HolderEquipItemEvent(holder, player));
-    }
-
-    @EventHandler
-    public void t(PlayerChatEvent e) {
-        ArmorStand as = Utils.getNewArmorStand(e.getPlayer().getLocation());
-        Bukkit.broadcastMessage("as: " + as.toString());
-        as.getEquipment().setItemInHand(new ItemStack(Material.DIAMOND_SWORD));
-        Bukkit.broadcastMessage("as: " + as.getEquipment().toString());
     }
 
     private boolean toExecute(PlayerInteractEvent e, Player player) {

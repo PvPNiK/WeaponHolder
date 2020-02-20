@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class HolderManager {
 
@@ -49,6 +50,7 @@ public class HolderManager {
 
         for (Location location : holders.keySet()) {
             Holder holder = holders.get(location);
+            holderFile.set("holders." + count + ".uuid", holder.getUuid().toString());
             holderFile.set("holders." + count + ".loc.position", holder.getPosition().name());
             saveLocation(holder.getHolderLocation(), holderFile, "holders." + count + ".loc");
             holderFile.set("holders." + count + ".item", holder.getItemStack());
@@ -73,7 +75,10 @@ public class HolderManager {
             Position position = positionCheck(holderFile, count);
             if (position == null) return;
 
-            Holder holder = new Holder(location, itemStack, position);
+            UUID uuid = uuidCheck(holderFile, count);
+            if (uuid == null) return;
+
+            Holder holder = new Holder(location, itemStack, position, uuid);
             add(holder);
             Bukkit.getScheduler().runTaskLater(WeaponHolder.getInstance(), new Runnable() {
                 @Override
@@ -83,6 +88,19 @@ public class HolderManager {
             }, 5l);
         }
         holderFile.delete();
+    }
+
+    private UUID uuidCheck(HolderFile holderFile, String count) {
+        UUID uuid = null;
+
+        if (holderFile.contains("holders." + count + ".uuid"))
+           uuid = UUID.fromString(holderFile.getConfig().getString("holders." + count + ".uuid"));
+
+        if (uuid == null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WeaponHolder! Null Position");
+            Bukkit.getConsoleSender().sendMessage("Could not load position: " + count);
+        }
+        return uuid;
     }
 
     private Position positionCheck(HolderFile holderFile, String count) {
