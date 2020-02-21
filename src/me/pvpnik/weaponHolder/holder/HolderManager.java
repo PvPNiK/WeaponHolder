@@ -50,7 +50,7 @@ public class HolderManager {
 
         for (Location location : holders.keySet()) {
             Holder holder = holders.get(location);
-            holderFile.set("holders." + count + ".uuid", holder.getUuid().toString());
+            holderFile.set("holders." + count + ".owner", holder.getOwner().toString());
             holderFile.set("holders." + count + ".loc.position", holder.getPosition().name());
             saveLocation(holder.getHolderLocation(), holderFile, "holders." + count + ".loc");
             holderFile.set("holders." + count + ".item", holder.getItemStack());
@@ -93,8 +93,8 @@ public class HolderManager {
     private UUID uuidCheck(HolderFile holderFile, String count) {
         UUID uuid = null;
 
-        if (holderFile.contains("holders." + count + ".uuid"))
-           uuid = UUID.fromString(holderFile.getConfig().getString("holders." + count + ".uuid"));
+        if (holderFile.contains("holders." + count + ".owner"))
+           uuid = UUID.fromString(holderFile.getConfig().getString("holders." + count + ".owner"));
 
         if (uuid == null) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "WeaponHolder! Null Position");

@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -24,8 +25,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class HolderListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onHolderEquipItem(HolderEquipItemEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Holder holder = e.getHolder();
         Player player = e.getPlayer();
 
@@ -35,8 +39,11 @@ public class HolderListener implements Listener {
         CooldownManager.addToCooldown(player.getUniqueId(), new Cooldown(player.getUniqueId()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onHolderUnequipItem(HolderUnequipItemEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Holder holder = e.getHolder();
         Player player = e.getPlayer();
 
@@ -55,10 +62,12 @@ public class HolderListener implements Listener {
         CooldownManager.addToCooldown(player.getUniqueId(), new Cooldown(player.getUniqueId()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onHolderBreak(HolderBreakEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         Holder holder = e.getHolder();
-        Player player = e.getPlayer();
 
         if (holder.getArmorStand() != null && holder.getArmorStand().isValid()) {
             holder.getArmorStand().remove();
@@ -70,7 +79,7 @@ public class HolderListener implements Listener {
         WeaponHolder.getInstance().holderManager.remove(location);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onArmorStandInteract(PlayerInteractAtEntityEvent e) {
         if (!(e.getRightClicked() instanceof ArmorStand))
             return;
@@ -81,7 +90,7 @@ public class HolderListener implements Listener {
             e.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onArmorStandDmg(EntityDamageEvent e) {
         if (e.getEntity() == null)
             return;
@@ -115,7 +124,7 @@ public class HolderListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPluginDisable(PluginDisableEvent e) {
         WeaponHolder.getInstance().holderManager.save();
     }

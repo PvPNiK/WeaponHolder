@@ -1,6 +1,5 @@
 package me.pvpnik.weaponHolder.event;
 
-import com.mysql.jdbc.Util;
 import me.pvpnik.weaponHolder.itemPosition.Position;
 import me.pvpnik.weaponHolder.utils.Messages;
 import me.pvpnik.weaponHolder.utils.Utils;
@@ -16,31 +15,82 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class HolderCallEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onHolderBreak(BlockBreakEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         HolderManager holderManager = WeaponHolder.getInstance().holderManager;
-        Block block = e.getBlock();
+        for (BlockFace blockFace : BlockFace.values()) {
+            if (blockFace.name().contains("_"))
+                continue;
+
+            Block block = e.getBlock().getRelative(blockFace);
+            Location blockLocation = block.getLocation();
+
+            if (!holderManager.contains(blockLocation))
+                continue;
+
+            Holder holder = holderManager.getHolder(blockLocation);
+            BreakCause breakCause = blockFace == BlockFace.SELF ? BreakCause.TRIPWIRE_HOOK_BREAK : BreakCause.NEAR_BLOCK_BREAK;
+            Bukkit.getPluginManager().callEvent(new HolderBreakEvent(holder, e.getPlayer(), breakCause));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPistonBreakHolder(BlockPistonExtendEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
+        Block block = e.getBlock().getRelative(e.getDirection());
+
+        if (block.getType() != Material.TRIPWIRE_HOOK)
+            return;
+
+        HolderManager holderManager = WeaponHolder.getInstance().holderManager;
         Location blockLocation = block.getLocation();
 
         if (!holderManager.contains(blockLocation))
             return;
 
         Holder holder = holderManager.getHolder(blockLocation);
-        Bukkit.getPluginManager().callEvent(new HolderBreakEvent(holder, e.getPlayer()));
+        Bukkit.getPluginManager().callEvent(new HolderBreakEvent(holder, null, BreakCause.PISTON_EXTEND));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWaterBreakHolder(BlockPhysicsEvent e) {
+        if (e.isCancelled() || !e.getSourceBlock().isLiquid()) {
+            return;
+        }
+        Block block = e.getBlock();
+
+        if (block.getType() != Material.TRIPWIRE_HOOK)
+            return;
+
+        HolderManager holderManager = WeaponHolder.getInstance().holderManager;
+        Location blockLocation = block.getLocation();
+
+        if (!holderManager.contains(blockLocation))
+            return;
+
+        Holder holder = holderManager.getHolder(blockLocation);
+        Bukkit.getPluginManager().callEvent(new HolderBreakEvent(holder, null, BreakCause.LIQUID));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onStringPlace(BlockPlaceEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         if (e.getBlock().getType() != Material.TRIPWIRE)
             return;
 
@@ -60,7 +110,7 @@ public class HolderCallEvent implements Listener {
                 continue;
 
             Holder holder = WeaponHolder.getInstance().holderManager.getHolder(blockLocation);
-            Bukkit.getPluginManager().callEvent(new HolderBreakEvent(holder, e.getPlayer()));
+            Bukkit.getPluginManager().callEvent(new HolderBreakEvent(holder, e.getPlayer(), BreakCause.STRING_PLACE));
         }
 
     }
@@ -87,8 +137,8 @@ public class HolderCallEvent implements Listener {
         Holder holder = holderManager.getHolder(blockLocation);
 
         if (!player.isOp() && !player.hasPermission("weaponholder.bypass")) {
-            if (!player.getUniqueId().equals(holder.getUuid())) {
-                player.sendMessage(Messages.weaponHolderIsUsed(holder.getUuid()));
+            if (!player.getUniqueId().equals(holder.getOwner())) {
+                player.sendMessage(Messages.weaponHolderIsUsed(holder.getOwner()));
                 return;
             }
         }

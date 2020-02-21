@@ -58,6 +58,7 @@ public class Utils {
         as.setCustomName(WeaponHolder.getInstance().getDescription().getName());
         as.setCustomNameVisible(false);
 
+        as.setAI(false);
         as.setBasePlate(false);
         as.setArms(true);
         as.setCanPickupItems(false);

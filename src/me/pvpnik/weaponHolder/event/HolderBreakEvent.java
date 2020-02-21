@@ -1,6 +1,8 @@
 package me.pvpnik.weaponHolder.event;
 
+import lombok.Getter;
 import me.pvpnik.weaponHolder.holder.Holder;
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -10,20 +12,15 @@ public class HolderBreakEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean cancelled;
-    private Player player;
-    private Holder holder;
+    @Nullable
+    @Getter private Player player;
+    @Getter private Holder holder;
+    @Getter private BreakCause breakCause;
 
-    public HolderBreakEvent(Holder holder, Player player) {
+    public HolderBreakEvent(Holder holder, Player player, BreakCause breakCause) {
         this.holder = holder;
         this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Holder getHolder() {
-        return holder;
+        this.breakCause = breakCause;
     }
 
     @Override

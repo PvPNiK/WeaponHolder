@@ -1,5 +1,7 @@
 package me.pvpnik.weaponHolder.holder;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.pvpnik.weaponHolder.itemPosition.Position;
 import me.pvpnik.weaponHolder.utils.Utils;
 import me.pvpnik.weaponHolder.WeaponHolder;
@@ -13,17 +15,18 @@ import java.util.UUID;
 
 public class Holder {
 
-    private Location holderLocation;
-    private ItemStack itemStack;
-    private Position position;
-    private ArmorStand armorStand;
-    private UUID uuid;
+    @Getter private Location holderLocation;
+    @Getter private ArmorStand armorStand;
+    @Getter @Setter private ItemStack itemStack;
+    @Getter @Setter private Position position;
+    @Getter @Setter private UUID owner;
 
-    public Holder(Location holderLocation, ItemStack itemStack, Position position, UUID uuid) {
+    public Holder(Location holderLocation, ItemStack itemStack, Position position, UUID owner) {
         this.holderLocation = holderLocation;
+        this.armorStand = null;
         this.itemStack = itemStack;
         this.position = position;
-        this.uuid = uuid;
+        this.owner = owner;
     }
 
     public void spawn() {
@@ -36,7 +39,7 @@ public class Holder {
                 positionLocation = itemPosition.getLocation(position);
         }
 
-        Location blockLocation = getHolderLocation().clone();
+        Location blockLocation = holderLocation.clone();
         blockLocation.add(positionLocation);
         blockLocation.setYaw(position.getYaw());
         blockLocation.setPitch(position.getPitch());
@@ -46,25 +49,5 @@ public class Holder {
             armorStand.setItemInHand(itemStack);
         else
             armorStand.getEquipment().setItemInMainHand(itemStack);
-    }
-
-    public Location getHolderLocation() {
-        return holderLocation;
-    }
-
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    public ArmorStand getArmorStand() {
-        return armorStand;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 }
